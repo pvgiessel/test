@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900 m-0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #root {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    text-align: left;
+    border: none;
+    min-height: 100vh;
+    display: block;
+  }
+}
+
+@layer components {
+  .form-input {
+    @apply w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900
+           focus:outline-none focus:ring-2 focus:ring-afas-blue/30 focus:border-afas-blue
+           placeholder:text-gray-400 transition-all;
+  }
+  .form-select {
+    @apply w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900
+           focus:outline-none focus:ring-2 focus:ring-afas-blue/30 focus:border-afas-blue
+           transition-all cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .gradient-afas {
+    background: linear-gradient(135deg, #002D5C 0%, #0057A8 50%, #1A78D6 100%);
+  }
+  .gradient-accent {
+    background: linear-gradient(135deg, #0057A8 0%, #00B4D8 100%);
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, #0057A8, #00B4D8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
