@@ -43,6 +43,9 @@ jobs:
 
       - name: Pages configureren
         uses: actions/configure-pages@v5
+        with:
+          # Schakel Pages automatisch in als dat nog niet gedaan is.
+          enablement: true
 
       - name: Artifact uploaden
         uses: actions/upload-pages-artifact@v3
