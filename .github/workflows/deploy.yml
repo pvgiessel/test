@@ -37,6 +37,11 @@ jobs:
 
       - name: Bouwen
         run: npm run build
+        env:
+          # Zet deze in: Settings -> Secrets and variables -> Actions -> Variables.
+          # De anon-key is een publieke sleutel; beveiliging gebeurt via RLS.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
       - name: SPA-fallback (deep links / refresh)
         run: cp dist/index.html dist/404.html

@@ -11,8 +11,14 @@ export interface User {
   avatarEmoji?: string;
   /** Optionele afbeelding (data-URL) als avatar. */
   avatarImage?: string;
-  /** Eenvoudige pincode voor de demo-login (optioneel). */
-  pin?: string;
+}
+
+/** Een gezin/huishouden waaronder alle data valt. */
+export interface Household {
+  id: string;
+  name: string;
+  /** Code waarmee andere gezinsleden zich kunnen aansluiten. */
+  inviteCode: string;
 }
 
 export interface FamilyLocation {

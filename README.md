@@ -43,10 +43,10 @@ iOS/iPadOS-app via [Capacitor](https://capacitorjs.com/).
 - **Tailwind CSS** voor de styling, **framer-motion** voor sheets en swipe.
 - **date-fns** voor datums; eigen, tijdzone-veilige herhalingslogica
   (`src/lib/recurrence.ts`).
-- **Local-first**: alle data staat in `localStorage` (zie `src/lib/storage.ts`).
-  De datalaag in `src/store/AppContext.tsx` is bewust afgeschermd achter
-  CRUD-functies, zodat later een echte backend (bijv. Supabase/Firebase) in te
-  pluggen is zonder de UI te wijzigen.
+- **Supabase** (Postgres + auth + realtime) als backend: echte accounts per
+  gezinslid, gedeelde data per gezin en live synchronisatie tussen apparaten.
+  De datalaag zit in `src/store/AppContext.tsx`; database-toegang in
+  `src/lib/supabase.ts` en het schema in `supabase/schema.sql`.
 
 ### Projectstructuur
 
@@ -59,17 +59,47 @@ src/
   pages/                 Login, Planning, Locaties, Gezin, Profiel
 ```
 
+## Database instellen (Supabase)
+
+De app heeft een Supabase-project nodig voor opslag, accounts en sync.
+
+1. Maak een gratis project op [supabase.com](https://supabase.com).
+2. Open in het dashboard de **SQL Editor**, plak de inhoud van
+   [`supabase/schema.sql`](supabase/schema.sql) en klik **Run**. Dit maakt de
+   tabellen, de beveiliging (Row Level Security) en de functies voor het
+   aanmaken/joinen van een gezin aan.
+3. Ga naar **Project Settings → API** en kopieer de **Project URL** en de
+   **anon public key**.
+4. (Optioneel, makkelijker testen) Zet onder **Authentication → Providers →
+   Email** de e-mailbevestiging uit, zodat je direct na registreren kunt
+   inloggen.
+
+> De anon-key is een publieke sleutel en mag in de frontend staan; de beveiliging
+> gebeurt via Row Level Security, zodat elk gezin alleen zijn eigen data ziet.
+
 ## Ontwikkelen
 
 ```bash
 npm install
-npm run dev      # start de webapp op http://localhost:5173
-npm run build    # type-check + productiebuild
+cp .env.example .env.local   # vul je Supabase URL + anon key in
+npm run dev                  # start de webapp op http://localhost:5173
+npm run build                # type-check + productiebuild
 npm run lint
 ```
 
-> Bij de eerste start wordt een voorbeeldgezin met afspraken en taken aangemaakt.
-> Wis de opslag van de site in je browser om opnieuw te beginnen.
+Bij de eerste keer: maak een account aan, kies **Nieuw gezin**, en nodig daarna
+andere gezinsleden uit met de **uitnodigingscode** (tabblad Gezin). Zij maken een
+eigen account en kiezen **Aansluiten** met die code.
+
+### Publiceren met de juiste sleutels
+
+De GitHub Pages-workflow leest de Supabase-gegevens uit **repository-variabelen**.
+Zet ze in **Settings → Secrets and variables → Actions → tabblad _Variables_**:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+Daarna bevat elke build automatisch de juiste verbinding.
 
 ## Native app (iOS / iPadOS) met Capacitor
 

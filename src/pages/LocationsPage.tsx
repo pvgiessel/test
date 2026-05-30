@@ -25,11 +25,11 @@ export function LocationsPage() {
     setCreating(false);
   };
 
-  const save = () => {
+  const save = async () => {
     if (!name.trim()) return;
     const payload = { name: name.trim(), address: address.trim() || undefined, notes: notes.trim() || undefined };
-    if (editing) updateLocation(editing.id, payload);
-    else addLocation(payload);
+    if (editing) await updateLocation(editing.id, payload);
+    else await addLocation(payload);
     close();
   };
 
@@ -76,7 +76,7 @@ export function LocationsPage() {
               <button
                 className="btn-danger"
                 onClick={() => {
-                  removeLocation(editing.id);
+                  void removeLocation(editing.id);
                   close();
                 }}
                 aria-label="Verwijderen"

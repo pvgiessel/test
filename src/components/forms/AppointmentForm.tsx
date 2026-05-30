@@ -72,12 +72,12 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
     };
   };
 
-  const doCreate = () => {
-    addAppointment({ ...buildPayload(), recurrence });
+  const doCreate = async () => {
+    await addAppointment({ ...buildPayload(), recurrence });
     onClose();
   };
 
-  const saveSeries = () => {
+  const saveSeries = async () => {
     if (!appointment) return;
     const payload = buildPayload();
     if (isSeries) {
@@ -87,7 +87,7 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
       const duration = end.getTime() - start.getTime();
       const newStart = combineDateTime(dayKey(anchor), allDay ? '00:00' : startTime);
       const newEnd = new Date(newStart.getTime() + duration);
-      updateAppointmentSeries(appointment.id, {
+      await updateAppointmentSeries(appointment.id, {
         title: payload.title,
         description: payload.description,
         locationId: payload.locationId,
@@ -98,12 +98,12 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
         end: toLocalISO(newEnd),
       });
     } else {
-      updateAppointmentSeries(appointment.id, { ...payload, recurrence });
+      await updateAppointmentSeries(appointment.id, { ...payload, recurrence });
     }
     onClose();
   };
 
-  const saveSingle = () => {
+  const saveSingle = async () => {
     if (!appointment || !occurrence) return;
     const payload = buildPayload();
     const override: EventOverride = {
@@ -115,17 +115,17 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
       allDay,
       userIds,
     };
-    updateOccurrence(appointment.id, occurrence.occurrenceKey, override);
+    await updateOccurrence(appointment.id, occurrence.occurrenceKey, override);
     onClose();
   };
 
   const handleSave = () => {
     if (!title.trim()) return;
-    if (!isEdit) return doCreate();
+    if (!isEdit) return void doCreate();
     if (isSeries && occurrence) {
       setScope('save'); // vraag deze afspraak vs hele reeks
     } else {
-      saveSeries();
+      void saveSeries();
     }
   };
 
@@ -134,15 +134,15 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
     if (isSeries && occurrence) {
       setScope('delete');
     } else {
-      removeAppointment(appointment.id);
+      void removeAppointment(appointment.id);
       onClose();
     }
   };
 
-  const handleAddLocation = () => {
+  const handleAddLocation = async () => {
     const name = newLocationName.trim();
     if (!name) return;
-    const loc = addLocation({ name });
+    const loc = await addLocation({ name });
     setLocationId(loc.id);
     setNewLocationName('');
     setShowNewLocation(false);
@@ -285,19 +285,19 @@ export function AppointmentForm({ open, onClose, appointment, occurrence, defaul
         onClose={() => setScope(null)}
         onChooseSingle={() => {
           if (scope === 'delete') {
-            if (appointment && occurrence) removeOccurrence(appointment.id, occurrence.occurrenceKey);
+            if (appointment && occurrence) void removeOccurrence(appointment.id, occurrence.occurrenceKey);
             onClose();
           } else {
-            saveSingle();
+            void saveSingle();
           }
           setScope(null);
         }}
         onChooseSeries={() => {
           if (scope === 'delete') {
-            if (appointment) removeAppointment(appointment.id);
+            if (appointment) void removeAppointment(appointment.id);
             onClose();
           } else {
-            saveSeries();
+            void saveSeries();
           }
           setScope(null);
         }}

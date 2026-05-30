@@ -28,7 +28,7 @@ export function TaskForm({
   const [date, setDate] = useState<string>(task?.date ?? defaultDate ?? '');
   const [userIds, setUserIds] = useState<string[]>(task?.userIds ?? []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) return;
     const payload = {
       title: title.trim(),
@@ -36,8 +36,8 @@ export function TaskForm({
       date: date || null,
       userIds,
     };
-    if (task) updateTask(task.id, payload);
-    else addTask(payload);
+    if (task) await updateTask(task.id, payload);
+    else await addTask(payload);
     onClose();
   };
 
@@ -52,7 +52,7 @@ export function TaskForm({
             <button
               className="btn-danger"
               onClick={() => {
-                if (task) removeTask(task.id);
+                if (task) void removeTask(task.id);
                 onClose();
               }}
               aria-label="Verwijderen"
