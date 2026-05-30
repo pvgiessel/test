@@ -1,0 +1,61 @@
+name: Deploy naar GitHub Pages
+
+on:
+  # Publiceer automatisch bij elke push naar de app-branch.
+  push:
+    branches:
+      - claude/family-planning-app-LgIPx
+  # Handmatig starten kan ook (tabblad Actions -> Run workflow).
+  workflow_dispatch:
+
+# Rechten die nodig zijn om naar Pages te publiceren.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Voorkom overlappende deploys; nieuwste wint.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node opzetten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Dependencies installeren
+        run: npm ci
+
+      - name: Bouwen
+        run: npm run build
+
+      - name: SPA-fallback (deep links / refresh)
+        run: cp dist/index.html dist/404.html
+
+      - name: Pages configureren
+        uses: actions/configure-pages@v5
+
+      - name: Artifact uploaden
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publiceren naar GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
