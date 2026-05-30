@@ -7,9 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:sync": "npm run build && cap sync",
+    "cap:add:ios": "cap add ios",
+    "cap:open:ios": "cap open ios"
   },
   "dependencies": {
+    "@capacitor/core": "^8.3.4",
+    "date-fns": "^4.4.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.11.0",
     "react": "^19.2.5",
@@ -17,6 +22,7 @@
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.3.4",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",

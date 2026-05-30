@@ -7,47 +7,54 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-gray-50 text-gray-900 m-0;
+    @apply bg-slate-100 text-slate-900 m-0;
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
   }
   #root {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
-    text-align: left;
-    border: none;
     min-height: 100vh;
-    display: block;
+    min-height: 100dvh;
+  }
+  /* Voorkom tekstselectie bij swipe-interacties */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
 }
 
 @layer components {
-  .form-input {
-    @apply w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900
-           focus:outline-none focus:ring-2 focus:ring-afas-blue/30 focus:border-afas-blue
-           placeholder:text-gray-400 transition-all;
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900
+           focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500
+           placeholder:text-slate-400 transition-all;
   }
-  .form-select {
-    @apply w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900
-           focus:outline-none focus:ring-2 focus:ring-afas-blue/30 focus:border-afas-blue
-           transition-all cursor-pointer;
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+           transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 shadow-sm;
+  }
+  .btn-ghost {
+    @apply btn bg-slate-100 text-slate-700 hover:bg-slate-200;
+  }
+  .btn-danger {
+    @apply btn bg-rose-50 text-rose-600 hover:bg-rose-100;
+  }
+  .card {
+    @apply rounded-2xl bg-white shadow-sm border border-slate-100;
   }
 }
 
 @layer utilities {
-  .gradient-afas {
-    background: linear-gradient(135deg, #002D5C 0%, #0057A8 50%, #1A78D6 100%);
-  }
-  .gradient-accent {
-    background: linear-gradient(135deg, #0057A8 0%, #00B4D8 100%);
-  }
-  .text-gradient {
-    background: linear-gradient(135deg, #0057A8, #00B4D8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 }
